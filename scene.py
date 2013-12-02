@@ -24,15 +24,12 @@ semanticL.properties(Vertical_Flip=False)
 semanticL.add_stream('socket')
 cat.append(semanticL)
 
-stabilizedquadrotor = StabilizedQuadrotor()
+#stabilizedquadrotor = StabilizedQuadrotor()
+#stabilizedquadrotor.translate(0, 0, 0.1)
+#cat.append(stabilizedquadrotor)
+#stabilizedquadrotor.add_interface('socket')
 
-# place your component at the correct location
-stabilizedquadrotor.translate(0, 0, 0.1)
 
-cat.append(stabilizedquadrotor)
-
-# define one or several communication interface, like 'socket'
-stabilizedquadrotor.add_interface('socket')
 
 
 #environment

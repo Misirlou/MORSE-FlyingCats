@@ -1,7 +1,7 @@
 from pymorse import Morse
 
 def is_mouse_visible(semantic_camera_stream):
-	""" Read data from the semantic camera, and determine if a specific
+	""" Read data from th	e semantic camera, and determine if a specific
 	object is within the field of view of the robot """
 	data = semantic_camera_stream.get()
 	visible_objects = data['visible_objects']
