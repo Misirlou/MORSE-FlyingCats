@@ -2,8 +2,9 @@ from pymorse import Morse
 import math
 
 
-dist=1.5
-height=5
+distThres=1.5
+safetyHeight=5
+mouseHeight=1
 
 def is_mouse_visible(semantic_camera_stream):
 	""" Read data from the semantic camera, and determine if a specific
@@ -32,48 +33,46 @@ def main():
 		motion = morse.cat.waypoint
 		#motion=morse.cat.catmotion
 		pos=where_is(pose)
-		waypoint={ "x":pos['x'],"y":pos['y'],"z":height,"yaw":pos['yaw'],"tolerance":0.5}
+		waypoint={ "x":pos['x'],"y":pos['y'],"z":safetyHeight,"yaw":pos['yaw'],"tolerance":0.5}
+		targetHeight=safetyHeight
 		
 		while True:
 			mouse_seen_left = is_mouse_visible(semanticL)
 			mouse_seen_right = is_mouse_visible(semanticR)
 			mouse_seen_front = is_mouse_visible(semanticF)
-			#mouse_seen_right = is_mouse_visible(semanticR)
-			#pitch,roll,yaw,height
-			#mot = {"theta_c":0,"phi_c":0,"psi_c":0,"h_c":15}
-			#motion.publish(mot)
 			pos=where_is(pose)
-			#waypoint={ "x":pos['x']+dist*math.cos(pos['yaw']),"y":pos['y']+dist*math.sin(pos['yaw']),"z":height,"yaw":pos['yaw'],"tolerance":0.5}
 			
 			if mouse_seen_front:
-				#waypoint=waypoint;
+				waypoint=waypoint;
 				#print(mouse_seen_front['x'])
-				#waypoint={
-				#	"x":pos['x']+mouse_seen_front['z']*math.cos(pos['yaw']),
-				#	"y":pos['y']+mouse_seen_front['z']*math.sin(pos['yaw']),
-				#	"z":height,
-				#	"yaw":pos['yaw'],
-				#	"tolerance":0.5}
 				waypoint={
 					"x":mouse_seen_front['x'],
 					"y":mouse_seen_front['y'],
-					"z":height,
+					"z":mouse_seen_front['z']+mouseHeight,#height,
 					"yaw":pos['yaw'],
 					"tolerance":0.5}
+				targetHeight=mouse_seen_front['z']+mouseHeight
 			elif mouse_seen_right:
 				waypoint={
 					"x":mouse_seen_right['x'],
 					"y":mouse_seen_right['y'],
-					"z":height,
+					"z":mouse_seen_right['z']+mouseHeight,#height,
 					"yaw":pos['yaw']-math.pi/3,
 					"tolerance":0.5}
+				targetHeight=mouse_seen_right['z']+mouseHeight
 			elif mouse_seen_left:
 				waypoint={
 					"x":mouse_seen_left['x'],
 					"y":mouse_seen_left['y'],
-					"z":height,
+					"z":mouse_seen_left['z']+mouseHeight,#height,
 					"yaw":pos['yaw']+math.pi/3,
 					"tolerance":0.5}
+				targetHeight=mouse_seen_left['z']+mouseHeight
+			dist = math.sqrt((waypoint['x']-pos['x'])**2+(waypoint['y']-pos['y'])**2)
+			if dist>distThres:
+				waypoint['z']=safetyHeight
+			else:
+				waypoint['z']=targetHeight
 			motion.publish(waypoint)
 			#motion.publish({"roll":0,"pitch":0.2,"yaw":0.1,"thrust":2})
 			

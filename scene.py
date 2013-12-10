@@ -38,6 +38,11 @@ semanticR.properties(Vertical_Flip=False)
 semanticR.add_stream('socket')
 cat.append(semanticR)
 
+light = Light()
+light.properties(color="(255,0,0)",energy=2.0)
+light.rotate(y=pi/2)
+cat.append(light);
+
 #catmotion = RotorcraftAttitude()
 #catmotion.translate(x=0, y=0, z=0.1)
 #cat.append(catmotion)
