@@ -1,7 +1,7 @@
 from morse.builder import *
 from math import pi
 
-#player controlled mouse
+# Player controlled mouse
 mouse=ATRV()
 mouse.properties(Object = True, Graspable = False, Label = "MOUSE")
 mouse.translate(x=1.0, z=0.2)
@@ -11,49 +11,43 @@ keyboard.properties(Speed=3.0)
 mouse.append(keyboard)
 
 
-#flying cat 1
-
-cat = Quadrotor()
-cat.translate(x=-7.0, z=1.0)
-cat.rotate(z=pi/3)
+# Chaser
+chaser = Quadrotor()
+chaser.translate(x=-7.0, z=1.0)
+chaser.rotate(z=pi/3)
 
 semanticF = SemanticCamera()
 semanticF.translate(x=0.3, z=-0.08)
 semanticF.rotate(y=-pi/6)
 semanticF.properties(Vertical_Flip=False)
 semanticF.add_stream('socket')
-cat.append(semanticF)
+chaser.append(semanticF)
 
 semanticL = SemanticCamera()
 semanticL.translate(y=0.3, z=-0.08)
 semanticL.rotate(x=+pi/3,y=-pi/6)
 semanticL.properties(Vertical_Flip=False)
 semanticL.add_stream('socket')
-cat.append(semanticL)
+chaser.append(semanticL)
 
 semanticR = SemanticCamera()
 semanticR.translate(y=-0.3, z=-0.08)
 semanticR.rotate(x=-pi/3,y=-pi/6)
 semanticR.properties(Vertical_Flip=False)
 semanticR.add_stream('socket')
-cat.append(semanticR)
+chaser.append(semanticR)
 
 light = Light()
 light.properties(color="(255,0,0)",energy=2.0)
 light.rotate(y=pi/2)
-cat.append(light);
-
-#catmotion = RotorcraftAttitude()
-#catmotion.translate(x=0, y=0, z=0.1)
-#cat.append(catmotion)
-#catmotion.add_stream('socket')
+chaser.append(light);
 
 waypoint = RotorcraftWaypoint()
-cat.append(waypoint)
+chaser.append(waypoint)
 waypoint.add_stream('socket')
 
 pose = Pose()
-cat.append(pose)
+chaser.append(pose)
 pose.add_stream('socket')
 
 
