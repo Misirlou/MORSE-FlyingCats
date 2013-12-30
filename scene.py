@@ -2,7 +2,7 @@ from morse.builder import *
 from math import pi
 
 # Player controlled mouse
-'''mouse=ATRV()
+mouse=ATRV()
 mouse.properties(Object = True, Graspable = False, Label = "MOUSE")
 mouse.translate(x=1.0, z=0.2)
 mouse.rotate(z=pi)
@@ -18,7 +18,7 @@ mouse.append(sick)
 
 keyboard = Keyboard()
 keyboard.properties(Speed=5.0)
-mouse.append(keyboard)'''
+mouse.append(keyboard)
 
 
 # Chaser
