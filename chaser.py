@@ -13,7 +13,7 @@ WP_TOLERANCE  = 0.8    # Waypoint Tolerance
 LOST_TH	= 15
 LOST_TH_BOTTOM = 10
 ESPIRAL_DIST_TH = 20.0
-RETAS_DIST_TH=10.0
+RETAS_DIST_TH=20.0
 
 def isCarVisible(semantic_camera_stream):
 	""" Read data from the semantic camera, and determine if a specific
@@ -45,11 +45,11 @@ class KnowledgeBase:
 	def resetLost(self):
 		self.lost=0
 		self.espiral_dist=0.5
-		self.espiral_dist_th=ESPIRAL_DIST_TH/6
+		self.espiral_dist_th=ESPIRAL_DIST_TH/8
 		self.espiral_orientation=self.pos['yaw']
-		self.retas_dist=0.5
-		self.retas_dist_th=RETAS_DIST_TH/3
-		self.retas_orientation=0
+		self.retas_dist=RETAS_DIST_TH
+		self.retas_dist_th=RETAS_DIST_TH/4
+		self.retas_orientation=5/6
 	def updateCarPos(self): # Updates the car position
 		carSeenLeft  = isCarVisible(self.semanticL)
 		carSeenFront = isCarVisible(self.semanticB)
@@ -103,32 +103,29 @@ class KnowledgeBase:
 			waypoint["z"]=SAFETY_HEIGHT
 		return waypoint
 	def espiral(self):
-		self.espiral_dist+=0.5
+		self.espiral_dist+=0.4
 		if self.espiral_dist>=self.espiral_dist_th:
 			self.espiral_dist=0.0
-			self.espiral_dist_th+=2.0
-			if self.espiral_dist_th>=ESPIRAL_DIST_TH:
-				self.espiral_dist_th=ESPIRAL_DIST_TH/6
+			self.espiral_dist_th*=2.0
+			if self.espiral_dist_th>ESPIRAL_DIST_TH:
+				self.espiral_dist_th=ESPIRAL_DIST_TH/8
 			self.goal["yaw"] = self.pos["yaw"]+math.pi/2
-		else:
-			self.goal["yaw"] = self.pos["yaw"]
-		self.goal["x"]   = self.pos["x"]+math.cos(self.goal["yaw"])*self.espiral_dist;
-		self.goal["y"]   = self.pos["y"]+math.sin(self.goal["yaw"])*self.espiral_dist;
-		self.goal["z"]   = SAFETY_HEIGHT;
+			self.goal["x"]   = self.pos["x"]+math.cos(self.goal["yaw"])*self.espiral_dist_th;
+			self.goal["y"]   = self.pos["y"]+math.sin(self.goal["yaw"])*self.espiral_dist_th;
+			self.goal["z"]   = SAFETY_HEIGHT;
 		print("lost");
 	def retas(self):
-		self.retas_dist+=0.2
+		self.retas_dist+=0.3
 		if self.retas_dist>=self.retas_dist_th:
 			self.retas_dist=0.0
-			self.retas_dist_th+=2.0
+			self.retas_dist_th+=1.0
 			if self.retas_dist_th>=RETAS_DIST_TH:
 				self.retas_dist_th=RETAS_DIST_TH
-			self.goal["yaw"] = self.pos["yaw"]+math.pi
-		else:
-			self.goal["yaw"] = self.pos["yaw"]
-		self.goal["x"]   = self.pos["x"]+math.cos(self.goal["yaw"])*self.lost_dist;
-		self.goal["y"]   = self.pos["y"]+math.sin(self.goal["yaw"])*self.lost_dist;
-		self.goal["z"]   = SAFETY_HEIGHT;
+			self.goal["yaw"] = self.pos["yaw"]+math.pi*5/6
+			self.goal["x"]   = self.pos["x"]+math.cos(self.goal["yaw"])*self.retas_dist_th;
+			self.goal["y"]   = self.pos["y"]+math.sin(self.goal["yaw"])*self.retas_dist_th;
+			self.goal["z"]   = SAFETY_HEIGHT;
+		
 		print("lost");
 		
 def main():
