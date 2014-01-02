@@ -20,6 +20,10 @@ keyboard = Keyboard()
 keyboard.properties(Speed=5.0)
 mouse.append(keyboard)
 
+mpose = Pose()
+mpose.add_stream('socket')
+mouse.append(mpose)
+
 
 # Chaser
 chaser = Quadrotor()
